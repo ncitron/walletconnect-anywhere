@@ -7,10 +7,17 @@ const App: React.FC = () => {
   const [url, setUrl] = useState<string>();
   const [provider, setProvider] = useState<ethers.providers.JsonRpcProvider>();
 
-  const handleSetupWeb3 = (e: FormEvent<HTMLFormElement>) => {
+  const handleSetupWeb3 = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (provider) {
+      console.log("already connected");
+      return;
+    }
+
+    await (window as any).ethereum.enable();
     const p = new ethers.providers.Web3Provider((window as any).ethereum);
-    console.log("web3: " + p);
+    console.log("connected to: " + (await p.listAccounts())[0]);
     setProvider(p);
   }
 
